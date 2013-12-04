@@ -4,7 +4,8 @@
 //#include <cmath>
 
 #include "include/SolverParameters.h"
-#include "include/diffops.h"
+#include "include/DiffOps.h"
+#include "include/PoissonSolver.h"
 
 using namespace std;
 //using namespace arma;
