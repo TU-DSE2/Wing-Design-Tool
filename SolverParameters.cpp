@@ -1,5 +1,11 @@
 #include "include/SolverParameters.h"
 
+/*
+Created:        3 december 2013     by Jeroen Barnhoorn
+Last update:    4 december 2013     by Jeroen Barnhoorn
+
+STATUS: DONE
+*/
 SolverParameters::SolverParameters() {
     boundaries   = true;
     viscous      = true;
@@ -8,8 +14,8 @@ SolverParameters::SolverParameters() {
     mean_flow[1] = -0.5;
     deltat       = -1;
 
-    grid_size[0]            = 96;
-    grid_size[1]            = 64;
+    grid_size[0]            = 8;
+    grid_size[1]            = 8;
     n_advection_steps       = 1;
     max_iter_streamfn       = 2;
     min_residual_streamfn   = 1e-4;

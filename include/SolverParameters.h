@@ -2,10 +2,6 @@
 #define SOLVERPARAMETERS_H
 
 class SolverParameters {
-    private:
-
-    protected:
-
     public:
         SolverParameters();
 
