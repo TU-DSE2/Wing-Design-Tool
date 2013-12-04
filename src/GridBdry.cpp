@@ -6,8 +6,6 @@ Last update:    4 december 2013     by Jeroen Barnhoorn
 
 STATUS: WIP
 */
-GridBdry::GridBdry() {
-}
 
 GridBdry::GridBdry(mat loc, mat interior, mat nn) {
     Gamma = loc;
@@ -33,5 +31,6 @@ int GridBdry::npoints() {
 
 vec GridBdry::interp_normals(cube u) {      //TODO
     vec temp = zeros<vec>(Gamma.n_rows);
+
     return temp;
 }

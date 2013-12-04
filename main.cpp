@@ -16,9 +16,7 @@ using namespace arma;
 bool verbose = true;
 
 int main() {
-    //if(verbose) { cout << "Initializing solver parameters... "; }
     SolverParameters SolverParameters;
-    //if(verbose) { cout << "Check!" << endl; }
 
     int Nx = SolverParameters.grid_size[0];
     int Ny = SolverParameters.grid_size[1];
@@ -37,11 +35,9 @@ int main() {
     cube dphi = zeros<cube>(Nx, Ny, 2);
     mat g_force = zeros<mat>(Nx, Ny);
 
-    //if(verbose) { cout << "Generating profile... "; }
     Rod Profile(x, y);
     GridBdry gridbdry = Profile.getGridBdry();
-    cout << gridbdry.Gamma;
-    //if(verbose) { cout << "Check!" << endl; }
+    ExactBdry exactbdry = Profile.getExactBdry();
 
     return 0;
 }

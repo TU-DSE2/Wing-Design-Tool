@@ -86,26 +86,54 @@ Rod::Rod(vec x, vec y) {
     interiortemp.submat(span(Nx8+1, Nx2-1), span(Ny2-thick+1, Ny2+thick-1)) = ones<mat>(Nx2-Nx8-1, 2*thick-1);
 
     interior = nonzero(interiortemp);
-    /*
-                                        # Exact bdry points
-    exact_top   = np.vstack((np.arange(Nx8,Nx2)+   .5, np.ones(length-1)*Ny2+thick)).T
-    exact_bot   = np.vstack((np.arange(Nx2,Nx8,-1)-.5, np.ones(length-1)*Ny2-thick)).T
-    exact_left  = np.vstack((np.ones(2*thick)*Nx8,    np.arange(Ny2-thick,Ny2+thick)   +.5)).T
-    exact_right = np.vstack((np.ones(2*thick)*Nx2,    np.arange(Ny2+thick,Ny2-thick,-1)-.5)).T
-    exnormal_top = np.array([0., 1.]) * np.ones((length-1,1))
-    exnormal_bot   = np.array([0.,-1.]) * np.ones((length-1,1))
-    exnormal_left  = np.array([-1.,0.]) * np.ones((2*thick,1))
-    exnormal_right = np.array([ 1.,0.]) * np.ones((2*thick,1))
 
-    ex_loc = np.vstack((exact_top, exact_right, exact_bot, exact_left))
-    ex_n = np.vstack((exnormal_top, exnormal_right, exnormal_bot, exnormal_left))
-    ex_ds  = np.ones(ex_n.shape[0]) * 1.
+    //Define exact boundary sides
+    mat exact_top(length-1, 2);
+    exact_top.col(1) = ones<mat>(length-1)*Ny2+thick;
+    exact_top.col(0) = linspace<vec>(Nx8+0.5, Nx2-0.5, length-1);
+    mat exact_bot(length-1, 2);
+    exact_bot.col(1) = ones<mat>(length-1)*Ny2-thick;
+    exact_bot.col(0) = linspace<vec>(Nx2-0.5, Nx8+0.5, length-1);
+    mat exact_left(2*thick, 2);
+    exact_left.col(0) = ones<mat>(2*thick)*Nx8;
+    exact_left.col(1) = linspace<vec>(Ny2-thick+0.5, Ny2+thick-0.5, 2*thick);
+    mat exact_right(2*thick, 2);
+    exact_right.col(0) = ones<mat>(2*thick)*Nx2;
+    exact_right.col(1) = linspace<vec>(Ny2+thick-0.5, Ny2-thick+0.5, 2*thick);
 
-    return (solver.GridBdry(Gamma_I, np.nonzero(interior), n),
-            solver.ExactBdry(ex_loc, ex_ds, ex_n))*/
+    //Define exact normal vectors
+    mat exnormal_top = zeros<mat>(length-1, 2);
+    exnormal_top.col(1) = ones<vec>(length-1);
+    mat exnormal_bot = zeros<mat>(length-1, 2);
+    exnormal_bot.col(1) = -ones<vec>(length-1, 1);
+    mat exnormal_left = zeros<mat>(2*thick, 2);
+    exnormal_left.col(0) = -ones<vec>(2*thick);
+    mat exnormal_right = zeros<mat>(2*thick, 2);
+    exnormal_right.col(0) = ones<vec>(2*thick);
+
+    //Combine exact boundary sides
+    ex_loc = zeros<mat>(exact_top.n_rows+exact_bot.n_rows+exact_left.n_rows+exact_right.n_rows, 2);
+    ex_loc.submat(span(0, exact_top.n_rows-1), span(0, 1)) = exact_top;
+    ex_loc.submat(span(exact_top.n_rows, exact_top.n_rows+exact_right.n_rows-1), span(0, 1)) = exact_right;
+    ex_loc.submat(span(exact_top.n_rows+exact_right.n_rows, exact_top.n_rows+exact_right.n_rows+exact_bot.n_rows-1), span(0, 1)) = exact_bot;
+    ex_loc.submat(span(exact_top.n_rows+exact_right.n_rows+exact_bot.n_rows, exact_top.n_rows+exact_right.n_rows+exact_bot.n_rows+exact_left.n_rows-1), span(0, 1)) = exact_left;
+
+    //Combine exact normal vectors
+    ex_n = zeros<mat>(exnormal_top.n_rows+exnormal_bot.n_rows+exnormal_left.n_rows+exnormal_right.n_rows, 2);
+    ex_n.submat(span(0, exnormal_top.n_rows-1), span(0, 1)) = exnormal_top;
+    ex_n.submat(span(exnormal_top.n_rows, exnormal_top.n_rows+exnormal_right.n_rows-1), span(0, 1)) = exnormal_right;
+    ex_n.submat(span(exnormal_top.n_rows+exnormal_right.n_rows, exnormal_top.n_rows+exnormal_right.n_rows+exnormal_bot.n_rows-1), span(0, 1)) = exnormal_bot;
+    ex_n.submat(span(exnormal_top.n_rows+exnormal_right.n_rows+exnormal_bot.n_rows, exnormal_top.n_rows+exnormal_right.n_rows+exnormal_bot.n_rows+exnormal_left.n_rows-1), span(0, 1)) = exnormal_left;
+
+    ex_ds = ones<vec>(ex_n.n_rows);
 }
 
 GridBdry Rod::getGridBdry() {
     GridBdry gridbdry(Gamma_I, interior, n);
     return gridbdry;
+}
+
+ExactBdry Rod::getExactBdry() {
+    ExactBdry exactbdry(ex_loc, ex_ds, ex_n);
+    return exactbdry;
 }
