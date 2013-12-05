@@ -134,7 +134,7 @@ cube grad_bdry(mat phi, GridBdry gridbdry) {
     }
 
     for(unsigned int i = 0; i < Gplus.n_rows; i++) {
-        dphi(Gamma(i, 0), Gamma(i, 1), 0) = phi(Gplus(i), Gamma(i, 1));
+        dphi(Gamma(i, 0), Gamma(i, 1), 0) = phi(Gplus(i), Gamma(i, 1)) - phi(Gminus(i), Gamma(i, 1));
     }
 
     for(unsigned int i = 0; i < Gplus.n_rows; i++) {
@@ -153,6 +153,7 @@ cube grad_bdry(mat phi, GridBdry gridbdry) {
     for(unsigned int i = 0; i < Gplus.n_rows; i++) {
         dphi(Gamma(i, 0), Gamma(i, 1), 1) = phi(Gamma(i, 0), Gplus(i)) - phi(Gamma(i, 0), Gminus(i));
     }
+
     return dphi;
 }
 
