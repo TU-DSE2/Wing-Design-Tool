@@ -3,6 +3,8 @@
 
 #include <armadillo>
 
+#include "GridBdry.h"
+
 using namespace arma;
 
 /*
@@ -102,16 +104,19 @@ cube curl2(mat psi) {
 }
 
 /*
-Written by Jeroen Barnhoorn,
-19 november 2013
+Created: 19 november 2013 by Jeroen Barnhoorn
+Last changed: 5 december 2013 by Jeroen Barnhoorn
 
 Replace dphi at the internal boundary with a 1-sided difference, on the
 outside of the body.
 
-STATUS: WIP
+STATUS: DONE
 */
-cube grad_bdry(mat phi, mat Gamma, mat Gnormals) {
-    Cube<double> dphi(phi.n_rows, phi.n_cols, 2);
+cube grad_bdry(mat phi, GridBdry gridbdry) {
+    Cube<double> dphi = zeros<cube>(phi.n_rows, phi.n_cols, 2);
+
+    mat Gamma = gridbdry.Gamma;
+    mat Gnormals = trans(gridbdry.n);
 
     vec Gplus = zeros<vec>(Gamma.n_rows);
     vec Gminus = zeros<vec>(Gamma.n_rows);
@@ -129,7 +134,7 @@ cube grad_bdry(mat phi, mat Gamma, mat Gnormals) {
     }
 
     for(unsigned int i = 0; i < Gplus.n_rows; i++) {
-        dphi(Gamma(i, 0), Gamma(i, 1), 0) = phi(Gplus(i), Gamma(i, 1)) - phi(Gminus(i), Gamma(i, 1));
+        dphi(Gamma(i, 0), Gamma(i, 1), 0) = phi(Gplus(i), Gamma(i, 1));
     }
 
     for(unsigned int i = 0; i < Gplus.n_rows; i++) {
@@ -148,7 +153,6 @@ cube grad_bdry(mat phi, mat Gamma, mat Gnormals) {
     for(unsigned int i = 0; i < Gplus.n_rows; i++) {
         dphi(Gamma(i, 0), Gamma(i, 1), 1) = phi(Gamma(i, 0), Gplus(i)) - phi(Gamma(i, 0), Gminus(i));
     }
-
     return dphi;
 }
 
