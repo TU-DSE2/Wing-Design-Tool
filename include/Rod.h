@@ -3,6 +3,7 @@
 
 #include <armadillo>
 #include "GridBdry.h"
+#include "ExactBdry.h"
 
 using namespace arma;
 
@@ -16,15 +17,18 @@ class Rod {
     public:
         vec x;
         vec y;
-        mat Gamma_I;
-        mat n;
-        mat interior;
-
         Rod(vec, vec);
 
         GridBdry getGridBdry();
+        ExactBdry getExactBdry();
     protected:
     private:
+        mat Gamma_I;
+        mat n;
+        mat interior;
+        mat ex_loc;
+        mat ex_n;
+        vec ex_ds;
 };
 
 #endif // ROD_H

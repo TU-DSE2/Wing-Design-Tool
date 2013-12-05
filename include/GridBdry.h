@@ -11,23 +11,19 @@ Last update:    4 december 2013     by Jeroen Barnhoorn
 
 STATUS: WIP
 */
-class GridBdry
-{
+class GridBdry {
     public:
         mat Gamma;
         mat n;
         mat OmegaI;
 
-        GridBdry();
         GridBdry(mat, mat, mat);
 
         void setGamma(mat);
         void setN(mat);
         void setOmegaI(mat);
         int npoints();
-        vec interp_normals(cube u);     //TODO
-    protected:
-    private:
+        rowvec interp_normal(cube u);     //TODO
 };
 
 #endif // GRIDBDRY_H_INCLUDED

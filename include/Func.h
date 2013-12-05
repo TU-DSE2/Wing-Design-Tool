@@ -7,7 +7,7 @@ Created: 4 december 2013
 
 STATUS: DONE
 */
-mat nonzero(mat in) {
+static mat nonzero(mat in) {
     umat temp = find(in);
     mat out = zeros<mat>(temp.n_rows, 2);
     out.col(0) = floor(conv_to<mat>::from(temp)/in.n_rows);

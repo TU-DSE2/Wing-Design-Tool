@@ -57,8 +57,8 @@ Rod::Rod(vec x, vec y) {
     rowvec normal_botright(2);
     normal_topleft << -1/sqrt(2) << 1/sqrt(2);
     normal_topright << 1/sqrt(2) << 1/sqrt(2);
-    normal_botleft << 1/sqrt(2) << -1/sqrt(2);
-    normal_botright << -1/sqrt(2) << -1/sqrt(2);
+    normal_botleft << -1/sqrt(2) << -1/sqrt(2);
+    normal_botright << 1/sqrt(2) << -1/sqrt(2);
 
     //Combine boundary points
     Gamma_I = zeros<mat>(side_top.n_rows+side_bot.n_rows+side_left.n_rows+side_right.n_rows+4, 2);

@@ -14,8 +14,8 @@ SolverParameters::SolverParameters() {
     mean_flow[1] = -0.5;
     deltat       = -1;
 
-    grid_size[0]            = 8;
-    grid_size[1]            = 8;
+    grid_size[0]            = 9;
+    grid_size[1]            = 9;
     n_advection_steps       = 1;
     max_iter_streamfn       = 2;
     min_residual_streamfn   = 1e-4;
