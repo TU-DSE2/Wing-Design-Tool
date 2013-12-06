@@ -112,8 +112,7 @@ outside of the body.
 
 STATUS: DONE
 */
-cube grad_bdry(mat phi, GridBdry gridbdry) {
-    Cube<double> dphi = zeros<cube>(phi.n_rows, phi.n_cols, 2);
+cube grad_bdry(mat phi, cube dphi, GridBdry gridbdry) {
 
     mat Gamma = gridbdry.Gamma;
     mat Gnormals = trans(gridbdry.n);
