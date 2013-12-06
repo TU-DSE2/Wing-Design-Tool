@@ -1,13 +1,11 @@
 #include <iostream>
 
 #include <armadillo>
-//#include <cmath>
 
 #include "include/SolverParameters.h"
 #include "include/DiffOps.h"
 #include "include/PoissonSolver.h"
 #include "include/Interpolate.h"
-//#include "include/Geometries.h"
 #include "include/Rod.h"
 #include "include/Vortex.h"
 #include "include/Func.h"
@@ -67,6 +65,8 @@ int main() {
 
     mat Lmat = L_matrix(gridbdry);
 
+    while(iter < 6) {
+
     psi = pSolve(-w);
     u = curl2(psi);
 
@@ -96,7 +96,7 @@ int main() {
 
     cube abs_u = abs(u);
     deltat = min(0.7/abs_u.max(), 1/(4.1*nu));
-    for(unsigned int i; i < SolverParameters.n_advection_steps; i++) {
+    for(int i = 0; i < SolverParameters.n_advection_steps; i++) {
         w = interpolate_M4(w, u*deltat);
     }
 
@@ -106,7 +106,6 @@ int main() {
         }
         ddw = laplace(w);
         w += deltat*nu*ddw;
-        cout << w;
     }
 
 
@@ -118,5 +117,12 @@ int main() {
             w(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0)) *= 0;
         }
     }
+
+    if(iter == 5) {
+        cout << w;
+    }
+    iter++;
+    }
+
     return 0;
 }

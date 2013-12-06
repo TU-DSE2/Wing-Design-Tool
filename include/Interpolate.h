@@ -4,8 +4,7 @@
 using namespace arma;
 
 /*
-Written by Jeroen Barnhoorn,
-20 november 2013
+Created: 20 november 2013 by Jeroen Barnhoorn
 
 Evaluate vorticity at grid-nodes given vorticity strength and coordinate
 offset from nodes. Args: w - vorticity (Nx,Ny), xx node-offset (2,Nx,Ny).
@@ -21,7 +20,7 @@ before computing the basis functions.
 TODO: CPU intensive part of code - this will be the main overhead, together
 with the Poisson solver.
 
-STATUS: NEEDS DEBUGGING
+STATUS: DONE
 */
 mat interpolate_M4(mat w, cube xx) {
     mat xa = abs(xx.slice(0));
