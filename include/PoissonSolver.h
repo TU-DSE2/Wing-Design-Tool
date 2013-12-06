@@ -9,6 +9,7 @@ Generates a Mat<int> Poisson matrix.
 
 STATUS: DONE
 */
+
 mat poissonMat(int size) {
     mat A(size, size, fill::zeros);
     int n = sqrt(size);
