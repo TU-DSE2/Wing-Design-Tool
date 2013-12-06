@@ -5,7 +5,7 @@
  *      Author: Steve Brust
  */
 
-#include "ExactBdry.h"
+#include "../include/ExactBdry.h"
 
 ExactBdry::ExactBdry(mat inbound_loc, mat inbound_ds, mat inbound_n) {
 	loc = inbound_loc;

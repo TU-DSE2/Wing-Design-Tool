@@ -9,6 +9,8 @@
 #include "include/Rod.h"
 #include "include/Vortex.h"
 #include "include/Func.h"
+#include "include/ExactBdry.h"
+#include "include/viscous_wall_vorticity_flux.h"
 
 using namespace std;
 using namespace arma;

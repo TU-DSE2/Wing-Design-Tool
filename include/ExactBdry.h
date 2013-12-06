@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * ExactBdry.h
  *
@@ -42,19 +41,3 @@ public:
 	virtual ~ExactBdry();
 };
 #endif /* EXACTBDRY_H_ */
-=======
-#ifndef EXACTBDRY_H
-#define EXACTBDRY_H
-
-#include <armadillo>
-
-using namespace arma;
-
-
-class ExactBdry {
-    public:
-        ExactBdry(mat, vec, mat);
-};
-
-#endif // EXACTBDRY_H
->>>>>>> 57cf9c674d580d494b6bf5aba197d5d778cdd933
