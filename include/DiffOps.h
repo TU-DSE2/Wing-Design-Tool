@@ -16,6 +16,24 @@ STATUS: TODO
 mat laplace(mat w) {
     mat ddw = zeros<mat>(w.n_rows, w.n_cols);
 
+    ddw.cols(1, ddw.n_cols - 2) = w.cols(2, w.n_cols - 1)
+    		- 2*w.cols(1, w.n_cols - 2) + w.cols(0, w.n_cols - 3); //indices take
+    //into account actual width and index start at zero. Middle cols
+
+    ddw.rows(1, ddw.n_rows - 2) = ddw.rows(1, ddw.n_rows - 2)
+    		+ w.rows(2, w.n_rows - 1) - 2*w.rows(1, w.n_rows - 2)
+    		+ w.rows(0, w.n_rows - 3); //+= statement for middle rows
+
+    ddw.col(0) = ddw.col(0) + 2*(w.col(1) - w.col(0)); //+= statement on first col ,
+    //Farfield Boundaries
+
+    ddw.col(ddw.n_cols - 1) = ddw.col(ddw.n_cols - 1) + 2*(w.col(w.n_cols - 2)
+    		- w.col(w.n_cols - 1)); //+= statement last col
+
+    ddw.row(0) = ddw.row(0) + 2*(w.row(1) - w.row(0));//+= statement on first row//GOOD
+
+    ddw.row(ddw.n_rows - 1) = ddw.row(ddw.n_rows - 1)
+    		+ 2*(w.row(w.n_rows - 2) - w.row(w.n_rows - 1));//+= last row //GOOD
     return ddw;
 }
 

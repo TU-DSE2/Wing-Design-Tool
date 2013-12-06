@@ -94,8 +94,8 @@ int main() {
         }
     }
 
-    cube tempu = abs(u);
-    deltat = min(0.7/tempu.max(), 1/(4.1*nu));
+    cube abs_u = abs(u);
+    deltat = min(0.7/abs_u.max(), 1/(4.1*nu));
     for(unsigned int i; i < SolverParameters.n_advection_steps; i++) {
         w = interpolate_M4(w, u*deltat);
     }
@@ -104,8 +104,9 @@ int main() {
         if(SolverParameters.boundaries) {
             //viscous_wall_vorticity_flux(exactbdry, u, w, deltat, nu);
         }
-        //ddw = laplace(w);
-        //w += deltat*nu*ddw
+        ddw = laplace(w);
+        w += deltat*nu*ddw;
+        cout << w;
     }
 
 
