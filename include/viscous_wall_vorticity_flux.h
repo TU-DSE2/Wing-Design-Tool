@@ -31,9 +31,9 @@ float phi(vec x, float d){
 	}
 }*/
 
-mat phi(cube x, mat d, float inbound_b){
-	mat x = exactbdry.X.slice(0);
-	mat y = exactbdry.X.slice(1);
+mat phi(cube inbound_X_cube, mat d, float inbound_b){
+	mat x = exactbdry.inbound_X_cube.slice(0);
+	mat y = exactbdry.inbound_X_cube.slice(1);
 	mat phi = zeros(x.n_rows, x.n_cols);
 	//switch function, filling of phi matrix, and filling of deltaw matrix
 	for (int i = 0; i < y.n_rows; i++){//y.n_elem fails b/c y is float
