@@ -52,11 +52,9 @@ mat phi(cube inbound_X_cube, mat d, float inbound_b){
 	}
 
 	return phi * y;
-	//phiX = 1.0/b * exp(pow(-y,2)/pow(b,2)) * (erfc((d-x)/b) + erfc((d+x)/b))
-
 }
 
-void viscous_wall_vorticity_flux(cube u, mat w, float deltat, float nu, ExactBdry exactbdry){
+mat viscous_wall_vorticity_flux(cube u, mat w, float deltat, float nu, ExactBdry exactbdry){
 	int M = exactbdry.npoints(); //number of point in exactbdry input
 	float nup = nu;
 	float deltatp = deltat*100;
@@ -67,16 +65,16 @@ void viscous_wall_vorticity_flux(cube u, mat w, float deltat, float nu, ExactBdr
 	int W = 2;
 	cube X = zeros(2*W, 2*W, 2);
 	mat deltaw = zeros(w.n_rows, w.n_cols);
-	vec i;
-	vec j;
+	int i;
+	int j;
 	vec temp1; vec temp2;
 
 	for (int m = 0; m < M; m++){
 		i = exactbdry.locx.row(m);
 		j = exactbdry.locy.row(m);
 
-		temp1 = linspace<vec>(i - W + 1, i + W, 2*W);
-		temp2 = linspace<vec>(j - W + 1, j + W, 2*W);
+		vec temp1 = linspace<vec>(i - W + 1, i + W, 2*W);
+		vec temp2 = linspace<vec>(j - W + 1, j + W, 2*W);
 
 		//X[0], X[1] = np.meshgrid(np.linspace(i-W+1,i+W,2*W),np.linspace(j-W+1,j+W,2*W))
 		//making meshgrid
