@@ -40,26 +40,25 @@ int ExactBdry::npoints(){
 
 mat ExactBdry::interp(cube inbound_u){
 	u = inbound_u;
-	int slice_count = u.n_slices;
 	mat temp = zeros(2,M);
+
 	for (int i = 0; i < M; i++){
-		for (int j = 0; j < slice_count; j++){
-			temp = temp +
-			basis(0,i) * u(locx(i), locy(i), j) +
-			basis(1,i) * u(locx(i) + 1, locy(i), j) +
-			basis(2,i) * u(locx(i) + 1, locy(i) + 1, j) +
-			basis(3,i) * u(locx(i), locy(i) + 1, j);
+		for (int j = 0; j < u.n_slices; j++){
+
+			temp(j,i) = temp(j,i)
+					+ basis(0,i)*u(locx(i),locy(i),j)
+					+ basis(1,i)*u(locx(i) + 1,locy(i),j)
+					+ basis(2,i)*u(locx(i) + 1,locy(i) + 1,j)
+					+ basis(3,i)*u(locx(i),locy(i) + 1,j);
 		}
 	}
+
 	return temp;
 }
 
 vec ExactBdry::interp_tangent(cube inbound_u){
 	u = inbound_u;
 	mat iu = interp(u);
-
-	cout << "for u: " << u.n_rows << " and " << u.n_cols << endl;
-	cout << "for tau: " << tau.n_rows << " and " << tau.n_cols << endl;
 
 	vec temp_interp_tangent = zeros<vec>(tau.n_rows);  //Supposed to be equal to M
 	if (iu.n_rows == tau.n_cols && tau.n_rows == iu.n_cols){
@@ -82,19 +81,19 @@ vec ExactBdry::interp_normal(cube inbound_u){
 	mat iu = interp(u);
 
 	vec temp_interp_normal = zeros<vec>(n.n_rows);  //Supposed to be equal to M
-		if (iu.n_rows == n.n_cols && n.n_rows == iu.n_cols){
-			for (int i = 0; i < n.n_rows; i++){//will run to M
-				for (int j = 0; j < n.n_cols; j++){//will run to 2
-					temp_interp_normal(i) = temp_interp_normal(i) + (iu(j,i) * n(i,j));
-				}
+	if (iu.n_rows == n.n_cols && n.n_rows == iu.n_cols){
+		for (int i = 0; i < n.n_rows; i++){//will run to M
+			for (int j = 0; j < n.n_cols; j++){//will run to 2
+				temp_interp_normal(i) = temp_interp_normal(i) + (iu(j,i) * n(i,j));
 			}
 		}
+	}
 
-		else {
-			cout << "The dimensions of n and u were not compatible" << endl;
-		}
+	else {
+		cout << "The dimensions of n and u were not compatible" << endl;
+	}
 
-		return temp_interp_normal;
+	return temp_interp_normal;
 }
 
 cube ExactBdry::local_coords(cube inbound_x, int inbound_m){
