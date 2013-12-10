@@ -6,11 +6,11 @@
 #include "include/SolverParameters.h"
 #include "include/Rod.h"
 #include "include/GridBdry.h"
-//#include "include/ExactBdry.h"
+#include "include/ExactBdry.h"
 #include "include/PoissonSolver.h"
 #include "include/DiffOps.h"
 #include "include/Interpolate.h"
-//#include "include/viscous_wall_vorticity_flux.h"
+#include "include/viscous_wall_vorticity_flux.h"
 
 using namespace std;
 using namespace arma;
@@ -22,6 +22,7 @@ class CFDSolver {
         GridBdry getGridBdry();
         void run(int);
         void add_vortex(int, int, double, double);
+        float** getWArray();
 
         int Nx;
         int Ny;
@@ -36,7 +37,7 @@ class CFDSolver {
 
         SolverParameters solverparameters;
         GridBdry gridbdry;
-        //ExactBdry exactbdry;
+        ExactBdry exactbdry;
         Rod Profile;
         vec x;
         vec y;

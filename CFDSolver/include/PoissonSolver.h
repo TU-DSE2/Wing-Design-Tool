@@ -2,10 +2,9 @@
 #define POISSON_INCLUDED
 
 /*
-Written by Jeroen Barnhoorn,
-25 november 2013
+Created:    25 november 2013    by Jeroen Barnhoorn
 
-Generates a Mat<int> Poisson matrix.
+Generates a Poisson matrix.
 
 STATUS: DONE
 */
@@ -30,8 +29,7 @@ static mat poissonMat(int size) {
 }
 
 /*
-Written by Jeroen Barnhoorn,
-27 november 2013
+Created:    27 november 2013    by Jeroen Barnhoorn
 
 STATUS: DONE
 */

@@ -16,7 +16,7 @@ CFDSolver::CFDSolver() {
 
     Profile.setSize(x, y);
     gridbdry = Profile.getGridBdry();
-    //exactbdry = Profile.getExactBdry();
+    exactbdry = Profile.getExactBdry();
 
     g = zeros<vec>(gridbdry.npoints());
 
@@ -86,7 +86,7 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.viscous) {
             if(solverparameters.boundaries) {
-                //viscous_wall_vorticity_flux(exactbdry, u, deltat, nu);
+                viscous_wall_vorticity_flux(u, w, deltat, nu, exactbdry);
             }
             ddw = laplace(w);
             w += deltat*nu*ddw;

@@ -8,7 +8,7 @@ STATUS: DONE
 */
 SolverParameters::SolverParameters() {
     boundaries   = true;
-    viscous      = false;   //DO NOT change, viscous not working yet
+    viscous      = true;
     viscosity    = 1e-2;
     mean_flow[0] = 1;
     mean_flow[1] = -0.5;
