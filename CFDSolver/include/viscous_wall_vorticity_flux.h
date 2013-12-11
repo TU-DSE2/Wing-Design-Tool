@@ -12,26 +12,10 @@ using namespace arma;
 Written by Steve Brust
 4 december 2013
 
-STATUS: TODO
+STATUS: Done; in need of validation and implementation
 */
 
-/*
-//phi is passed two vectors
-//This function will go into the loop below. C++ does not allow functions within functions
-float f_phi(vec x, float d){
-	//vec y = zeros<vec>(x.n_elem);
-	float(y) = x(1);//Takes a vector and creates two points, I think?
-	x = x(0);
-	//switch = np.where(y >= 0, 1., 0.)
-	//Run through array y, if logic statement is true, set element to 1.0, if false set to 0.0
-
-	//vec switch;
-	for (int i = 0; i < 1; i++){//y.n_elem fails b/c y is float
-
-	}
-}*/
-
-static mat f_phi(cube inbound_X_cube, mat d, float inbound_b){
+static mat f_phi(cube inbound_X_cube, double d, float inbound_b){
     mat x = inbound_X_cube.slice(0);
     mat y = inbound_X_cube.slice(1);
     mat nphi = zeros(x.n_rows, x.n_cols);
@@ -44,10 +28,8 @@ static mat f_phi(cube inbound_X_cube, mat d, float inbound_b){
 			else {
 				y(i,j) = 0.0;
             }
-
             nphi(i,j) = 1.0/inbound_b * exp(pow(-y(i,j), 2) / pow(inbound_b, 2))
-				* (erfc((d(i) - x(i,j)) / inbound_b) + erfc((d(i) + x(i,j)) / inbound_b));
-
+				* (erfc((d - x(i,j)) / inbound_b) + erfc((d + x(i,j)) / inbound_b));
 		}
     }
 
@@ -55,7 +37,7 @@ static mat f_phi(cube inbound_X_cube, mat d, float inbound_b){
 }
 
 static mat viscous_wall_vorticity_flux(cube u, mat w, float deltat, float nu, ExactBdry exactbdry){
-    int M = exactbdry.npoints(); //number of point in exactbdry input
+	int M = exactbdry.npoints(); //number of point in exactbdry input
     float nup = nu;
 	float deltatp = deltat*100;
     float b = sqrt(4.0*nup*deltatp);
@@ -64,74 +46,46 @@ static mat viscous_wall_vorticity_flux(cube u, mat w, float deltat, float nu, Ex
 	vec wloc = utau;
 	int W = 2;
 	cube X = zeros(2*W, 2*W, 2);
-    mat deltaw = zeros(w.n_rows, w.n_cols);
+    mat deltaw = zeros(w.n_rows, w.n_cols);//9x9
 	int i;
     int j;
     vec temp1; vec temp2;
-	for (int m = 0; m < M; m++){
-		i = exactbdry.locx.row(m);
-		j = exactbdry.locy.row(m);
+    for (int m = 0; m < M; m++){
+		i = exactbdry.locx(m);
+		j = exactbdry.locy(m);
 
 		vec temp1 = linspace<vec>(i - W + 1, i + W, 2*W);
 		vec temp2 = linspace<vec>(j - W + 1, j + W, 2*W);
 
 		//X[0], X[1] = np.meshgrid(np.linspace(i-W+1,i+W,2*W),np.linspace(j-W+1,j+W,2*W))
         //making meshgrid
-		for (int i = 0; i < 2*W; i++){
-            X.slice(0).row(i) = trans(temp1);
-            X.slice(1).col(i) = temp2;
+		for (int k = 0; k < 2*W; k++){
+            X.slice(0).row(k) = trans(temp1);
+            X.slice(1).col(k) = temp2;
         }
 
-        mat phiX = f_phi(exactbdry.local_coords(X, m), exactbdry.ds.row(m), b);
-		deltaw.submat(i-W+1, j-W+1, i+W+1, j+W+1) =
-            deltaw.submat(i-W+1, j-W+1, i+W+1, j+W+1) + wloc.row(m) * phiX;
+		//function call to above f_phi function
+        mat phiX = f_phi(exactbdry.local_coords(X, m), exactbdry.ds(m), b);
 
-		//phi function below
-		//Going to input exactbdry.local_coords and exactbdry.ds
-		//phiX = phi(exactbdry.local_coords(X, m), exactbdry.ds[m];
+        //The following two for loops is simply the line
+        //deltaw[i-W+1:i+W+1,j-W+1:j+W+1] += wloc[m] * phiX
+        mat temp_mat = zeros(phiX.n_rows, phiX.n_cols);
+        for (int k = 0; k < (i+W+1) - (i-W+1); k++){//k should run from 0 to 3
+        	for (int l = 0; l < (j+W+1) - (j-W+1); l++){//j should run from 0 to 3
+        		temp_mat(k,l) = deltaw(i-W+1 + k, j-W+1 + l);
+        	}
+        }
 
-		//the function, phi
-		//vec y = zeros<vec>(x.n_elem);
-			//float(y) = x(1);//Takes a vector and creates two points, I think?
-			//x = x(0);
+        temp_mat = temp_mat + (wloc(m) * phiX);
 
-		//mat x = exactbdry.X.slice(0);
-		//mat y = exactbdry.X.slice(1);
-
-			//switch = np.where(y >= 0, 1., 0.)
-			//Run through array y, if logic statement is true, set element to 1.0, if false set to 0.0
-
-			//vec switch;
-		/*
-		for (int i = 0; i < y.n_rows; i++){//y.n_elem fails b/c y is float
-			for (int j = 0; j < y.n_cols; j++){
-				if (y(i,j) >= 0){
-					y(i,j) = 1.0;
-				}
-				else {
-					y(i,j) = 0.0;
-				}
-			}
-		}
-
-		for (int i = 0; i < ; i++){
-			for (int j = 0; j < ; j++){
-				mat phiX = 1.0/b * exp(pow(-y,2)/pow(b,2)) * (erfc((d-x)/b) + erfc((d+x)/b));
-
-				deltaw.submat(i-W+1, j-W+1, i+W+1, j+W+1) =
-						deltaw.submat(i-W+1, j-W+1, i+W+1, j+W+1) + wloc.row(m) * phiX
-
-			}
-		}
-
-
-		//Now set value of phi
-		//phi = 1.0/b * np.exp(-y**2/b**2) * (erf((d-x)/b) + erf((d+x)/b))
-	*/
+        for (int k = 0; k < (i+W+1) - (i-W+1); k++){//k should run from 0 to 3
+            for (int l = 0; l < (j+W+1) - (j-W+1); l++){//j should run from 0 to 3
+            	deltaw(i-W+1 + k, j-W+1 + l) = temp_mat(k,l);
+            }
+        }
     }
 
     w = w + deltaw * 0.02;
-
     return w;
 
 }
