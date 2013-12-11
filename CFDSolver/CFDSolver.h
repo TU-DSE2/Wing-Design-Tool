@@ -10,7 +10,7 @@
 #include "include/PoissonSolver.h"
 #include "include/DiffOps.h"
 #include "include/Interpolate.h"
-#include "include/viscous_wall_vorticity_flux.h"
+#include "include/ViscousWallVorticityFlux.h"
 
 using namespace std;
 using namespace arma;
