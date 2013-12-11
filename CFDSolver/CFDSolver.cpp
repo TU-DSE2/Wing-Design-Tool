@@ -26,6 +26,32 @@ CFDSolver::CFDSolver() {
     iter = 0;
 }
 
+CFDSolver::CFDSolver(int Nxin, int Nyin) {
+    Nx = Nxin;
+    Ny = Nyin;
+    x = linspace<vec>(0, Nx-1, Nx);
+    y = linspace<vec>(0, Ny-1, Ny);
+    nu = solverparameters.viscosity;
+
+    u = zeros<cube>(Nx, Ny, 2);
+    w = zeros<mat>(Nx, Ny);
+    ddw = zeros<mat>(Nx, Ny);
+    psi = zeros<mat>(Nx, Ny);
+    dphi = zeros<cube>(Nx, Ny, 2);
+    g_force = zeros<mat>(Nx, Ny);
+
+    Profile.setSize(x, y);
+    gridbdry = Profile.getGridBdry();
+    exactbdry = Profile.getExactBdry();
+
+    g = zeros<vec>(gridbdry.npoints());
+
+    Lmat = L_matrix();
+
+    total_iterations = 0;
+    iter = 0;
+}
+
 rowvec CFDSolver::L_matvec(rowvec garg) {
     for(unsigned int i = 0; i < garg.n_cols; i++) {
         g_force(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1)) = garg(i);
@@ -86,7 +112,7 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.viscous) {
             if(solverparameters.boundaries) {
-                viscous_wall_vorticity_flux(u, w, deltat, nu, exactbdry);
+                w = viscous_wall_vorticity_flux(u, w, deltat, nu, exactbdry);
             }
             ddw = laplace(w);
             w += deltat*nu*ddw;
@@ -106,7 +132,7 @@ void CFDSolver::run(int iterations) {
     }
 }
 
-void CFDSolver::add_vortex(int xcenter, int ycenter, double radius, double strength) {
+void CFDSolver::addVortex(int xcenter, int ycenter, double radius, double strength) {
     mat X = zeros<mat>(Nx, Nx);
     mat Y = zeros<mat>(Ny, Ny);
     for(unsigned int i = 0; i < X.n_rows; i++) {
@@ -118,7 +144,7 @@ void CFDSolver::add_vortex(int xcenter, int ycenter, double radius, double stren
     mat r = zeros<mat>(x.n_rows, y.n_rows);
     r = sqrt(square(trans(X)-xcenter) + square(trans(Y)-ycenter));
     mat temp = zeros<mat>(x.n_rows, y.n_rows);
-    temp = 0.5*(cos(M_PI * r / 1.125) + 1)*strength;
+    temp = 0.5*(cos(M_PI * r / radius) + 1)*strength;
     for(unsigned int i = 0; i < temp.n_cols; i++) {
         for(unsigned int j = 0; j < temp.n_rows; j++) {
             if(r(i, j) > radius) {

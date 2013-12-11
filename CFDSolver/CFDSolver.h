@@ -18,11 +18,11 @@ using namespace arma;
 class CFDSolver {
     public:
         CFDSolver();
+        CFDSolver(int, int);
 
         GridBdry getGridBdry();
         void run(int);
-        void add_vortex(int, int, double, double);
-        float** getWArray();
+        void addVortex(int, int, double, double);
 
         int Nx;
         int Ny;
