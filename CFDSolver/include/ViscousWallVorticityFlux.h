@@ -21,8 +21,7 @@ static mat f_phi(cube inbound_X_cube, double d, float inbound_b){
     mat y = inbound_X_cube.slice(1);
     mat yswitch = zeros<mat>(y.n_rows, y.n_cols);
     mat nphi = zeros(x.n_rows, x.n_cols);
-    //switch function, filling of phi matrix, and filling of deltaw matrix
-    for (unsigned int i = 0; i < x.n_rows; i++){//y.n_elem fails b/c y is float
+    for (unsigned int i = 0; i < x.n_rows; i++){
         for (unsigned int j = 0; j < x.n_cols; j++){
 			if (y(i,j) >= 0){
                 yswitch(i,j) = 1.0;
@@ -43,7 +42,7 @@ static mat viscous_wall_vorticity_flux(cube u, mat w, float deltat, float nu, Ex
     float nup = nu;
     float deltatp = deltat*100;
     float b = sqrt(4*nup*deltatp);
-    b = 1;  // Why?
+    b = 1;  // Why? ^
     mat wloc = exactbdry.interp_tangent(u);
     int W = 2;  // Width of window
     cube X = zeros<cube>(2*W, 2*W, 2);
