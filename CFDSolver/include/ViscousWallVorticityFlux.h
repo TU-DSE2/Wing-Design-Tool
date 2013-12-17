@@ -10,8 +10,8 @@ using namespace arma;
 using namespace std;
 
 /*
-Created:         4 december 2013    by Steve Brust
-Last updated:   11 december 2013    by Jeroen Barnhoorn
+Created: 4 december 2013 by Steve Brust
+Last updated: 11 december 2013 by Jeroen Barnhoorn
 
 STATUS: WIP
 */
@@ -23,14 +23,14 @@ static mat f_phi(cube inbound_X_cube, double d, float inbound_b){
     mat nphi = zeros(x.n_rows, x.n_cols);
     for (unsigned int i = 0; i < x.n_rows; i++){
         for (unsigned int j = 0; j < x.n_cols; j++){
-			if (y(i,j) >= 0){
+                        if (y(i,j) >= 0){
                 yswitch(i,j) = 1.0;
             }
-			else {
+                        else {
                 yswitch(i,j) = 0.0;
             }
             nphi(i, j) = 1/inbound_b * exp(-pow(y(i, j), 2)/pow(inbound_b, 2)) * (erf((d-x(i, j))/inbound_b) + erf(d+x(i,j))/inbound_b);
-		}
+                }
     }
     return nphi % yswitch;
 }
@@ -42,9 +42,9 @@ static mat viscous_wall_vorticity_flux(cube u, mat w, float deltat, float nu, Ex
     float nup = nu;
     float deltatp = deltat*100;
     float b = sqrt(4*nup*deltatp);
-    b = 1;  // Why? ^
+    b = 1; // Why? ^
     mat wloc = exactbdry.interp_tangent(u);
-    int W = 2;  // Width of window
+    int W = 2; // Width of window
     cube X = zeros<cube>(2*W, 2*W, 2);
     mat deltaw = zeros<mat>(u.n_rows, u.n_cols);
     for(int m = 0; m < M; m++) {

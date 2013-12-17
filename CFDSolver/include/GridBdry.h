@@ -14,7 +14,7 @@ STATUS: WIP
 class GridBdry {
     public:
         mat Gamma;
-        mat n;
+        mat n_grid;
         mat OmegaI;
 
         GridBdry(mat, mat, mat);

@@ -5,6 +5,8 @@
 
 #include "include/SolverParameters.h"
 #include "include/Rod.h"
+#include "include/Cylinder.h"
+#include "include/CustomProfile.h"
 #include "include/GridBdry.h"
 #include "include/ExactBdry.h"
 #include "include/PoissonSolver.h"
@@ -38,7 +40,9 @@ class CFDSolver {
         SolverParameters solverparameters;
         GridBdry gridbdry;
         ExactBdry exactbdry;
-        Rod Profile;
+        //CustomProfile profile;
+        Cylinder profile;
+        //Rod profile;
         vec x;
         vec y;
         vec g;
