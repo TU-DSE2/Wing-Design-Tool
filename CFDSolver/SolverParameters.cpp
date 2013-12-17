@@ -1,8 +1,9 @@
+
 #include "include/SolverParameters.h"
 
 /*
-Created:        3 december 2013     by Jeroen Barnhoorn
-Last update:    4 december 2013     by Jeroen Barnhoorn
+Created:         3 december 2013     by Jeroen Barnhoorn
+Last update:    11 december 2013     by Jeroen Barnhoorn
 
 STATUS: DONE
 */
@@ -14,8 +15,8 @@ SolverParameters::SolverParameters() {
     mean_flow[1] = -0.5;
     deltat       = -1;
 
-    grid_size[0]                = 9;
-    grid_size[1]                = 9;
+    grid_size[0]                = 48;
+    grid_size[1]                = 48;
     n_advection_steps           = 1;
     max_iter_streamfn           = 2;
     min_residual_streamfn       = 1e-4;
@@ -27,4 +28,6 @@ SolverParameters::SolverParameters() {
     min_residual_GMRes          = 1e-3;
 
     matplotlib_output           = -1;
+
+    use_cuda    = true;
 }

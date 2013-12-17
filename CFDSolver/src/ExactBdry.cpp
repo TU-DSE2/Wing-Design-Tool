@@ -25,7 +25,7 @@ ExactBdry::ExactBdry(mat inbound_loc, mat inbound_ds, mat inbound_n) {
 
 	M = loc.n_rows;
 
-	basis = zeros(4,M);
+    basis = zeros(4, M);
 	for (int i = 0; i < M; i++){
 		basis(0,i) = (1 - loco(i,0)) * (1 - loco(i,1));
 		basis(1,i) = loco(i,0) * (1 - loco(i,1));
@@ -70,7 +70,7 @@ vec ExactBdry::interp_tangent(cube inbound_u){
 	}
 
 	else {
-		cout << "The dimensions of tau and u were not compatible" << endl;
+        //cout << "The dimensions of tau and u were not compatible" << endl;
 	}
 
 	return temp_interp_tangent;
@@ -90,7 +90,7 @@ vec ExactBdry::interp_normal(cube inbound_u){
 	}
 
 	else {
-		cout << "The dimensions of n and u were not compatible" << endl;
+        //cout << "The dimensions of n and u were not compatible" << endl;
 	}
 
 	return temp_interp_normal;
@@ -98,7 +98,7 @@ vec ExactBdry::interp_normal(cube inbound_u){
 
 cube ExactBdry::local_coords(cube inbound_x, int inbound_m){
 	x = inbound_x;//public vars equal to the input values
-	m = inbound_m;
+    m = inbound_m;
 
 	mat ntau = zeros(tau.n_cols,n.n_cols);//Usually a 2x2 matrix
 	ntau.row(0) = tau.row(m);

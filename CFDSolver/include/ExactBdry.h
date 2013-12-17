@@ -31,7 +31,7 @@ public:
 	int m;
 
     ExactBdry() { }
-	ExactBdry(mat inbound_loc, mat inbound_ds, mat inbound_n);
+    ExactBdry(mat, mat, mat);
 
 	int npoints();
 	mat interp(cube inbound_u);

@@ -23,6 +23,8 @@ class SolverParameters {
         float min_residual_GMRes;
 
         int matplotlib_output;
+
+        bool use_cuda;
 };
 
 #endif // SOLVERPARAMETERS_H

@@ -5,12 +5,14 @@
 
 #include "include/SolverParameters.h"
 #include "include/Rod.h"
+#include "include/Cylinder.h"
+#include "include/CustomProfile.h"
 #include "include/GridBdry.h"
 #include "include/ExactBdry.h"
 #include "include/PoissonSolver.h"
 #include "include/DiffOps.h"
 #include "include/Interpolate.h"
-#include "include/viscous_wall_vorticity_flux.h"
+#include "include/ViscousWallVorticityFlux.h"
 
 using namespace std;
 using namespace arma;
@@ -38,7 +40,9 @@ class CFDSolver {
         SolverParameters solverparameters;
         GridBdry gridbdry;
         ExactBdry exactbdry;
-        Rod Profile;
+        //CustomProfile profile;
+        Cylinder profile;
+        //Rod profile;
         vec x;
         vec y;
         vec g;

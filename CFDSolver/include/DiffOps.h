@@ -133,7 +133,7 @@ STATUS: DONE
 static cube grad_bdry(mat phi, cube dphi, GridBdry gridbdry) {
 
     mat Gamma = gridbdry.Gamma;
-    mat Gnormals = trans(gridbdry.n);
+    mat Gnormals = trans(gridbdry.n_grid);
 
     vec Gplus = zeros<vec>(Gamma.n_rows);
     vec Gminus = zeros<vec>(Gamma.n_rows);

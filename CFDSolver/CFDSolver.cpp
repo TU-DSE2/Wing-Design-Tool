@@ -14,9 +14,10 @@ CFDSolver::CFDSolver() {
     dphi = zeros<cube>(Nx, Ny, 2);
     g_force = zeros<mat>(Nx, Ny);
 
-    Profile.setSize(x, y);
-    gridbdry = Profile.getGridBdry();
-    exactbdry = Profile.getExactBdry();
+    profile.setSize(x, y, Nx/4, Ny/2, Nx/16, 120);
+    //profile.setSize(x, y);
+    gridbdry = profile.getGridBdry();
+    exactbdry = profile.getExactBdry();
 
     g = zeros<vec>(gridbdry.npoints());
 
@@ -40,9 +41,10 @@ CFDSolver::CFDSolver(int Nxin, int Nyin) {
     dphi = zeros<cube>(Nx, Ny, 2);
     g_force = zeros<mat>(Nx, Ny);
 
-    Profile.setSize(x, y);
-    gridbdry = Profile.getGridBdry();
-    exactbdry = Profile.getExactBdry();
+    profile.setSize(x, y, Nx/4, Ny/2, Nx/16, 120);
+    //profile.setSize(x, y);
+    gridbdry = profile.getGridBdry();
+    exactbdry = profile.getExactBdry();
 
     g = zeros<vec>(gridbdry.npoints());
 
@@ -113,6 +115,7 @@ void CFDSolver::run(int iterations) {
         if(solverparameters.viscous) {
             if(solverparameters.boundaries) {
                 w = viscous_wall_vorticity_flux(u, w, deltat, nu, exactbdry);
+                cout << sum(sum(w));
             }
             ddw = laplace(w);
             w += deltat*nu*ddw;
