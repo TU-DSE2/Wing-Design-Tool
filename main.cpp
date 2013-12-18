@@ -1,6 +1,5 @@
 #include <iostream>
 #include <armadillo>
-#include <paralution.hpp>
 #include "CFDSolver/CFDSolver.h"
 #include "CFDSolver/include/Cylinder.h"
 
