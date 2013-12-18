@@ -3,6 +3,7 @@
  *
  *  Created on: Dec 5, 2013
  *      Author: Steve Brust
+ *  Last updated: Dec 18, 2013 (S. Brust)
  */
 
 #include "../include/ExactBdry.h"
@@ -115,7 +116,8 @@ cube ExactBdry::local_coords(cube inbound_x, int inbound_m){
             for (unsigned int k = 0; k < x.n_cols; k++){
 				x_trans(i,j,k) = x(i,k,j);
 				temp1(i,j,k) = x_trans(i,j,k) - loc(m,j);
-			}
+				//temp1(i,j,k) = x_trans(i,j,k) - loc(0,j);
+            }
 		}
 	}
 
@@ -130,20 +132,14 @@ cube ExactBdry::local_coords(cube inbound_x, int inbound_m){
 
 	cube result = zeros(4,4,2);//initialize matrix to fill with result
 
-	//the following two loops are the .py line np.einsum("ijk,li->ljk",(x.T-self.loc[m].T ...
+	//the following loop is the .py line np.einsum("ijk,li->ljk",(x.T-self.loc[m].T ...
 	//A bit of hardcoding in here ntau(0,0) and ntau(0,1)
     for(unsigned int i = 0; i < result.slice(0).n_rows; i++){
         for(unsigned int j = 0; j < result.slice(0).n_cols; j++){
-			result(i,j,0) = temp2(i,j,0)*ntau(0,0) + temp2(i,j,1)*ntau(1,0);
-		}
+			result(i,j,0) = temp2(i,j,0)*ntau(0,0) + temp2(i,j,1)*ntau(0,1);
+			result(i,j,1) = temp2(i,j,0)*ntau(1,0) + temp2(i,j,1)*ntau(1,1);
+		}//result(i,j,0) = temp2(i,j,0)*ntau(0,0) + temp2(i,j,1)*ntau(1,0);
 	}
-
-    for(unsigned int i = 0; i < result.slice(0).n_rows; i++){
-            for(unsigned int j = 0; j < result.slice(0).n_cols; j++){
-				result(i,j,1) = temp2(i,j,0)*ntau(0,1) + temp2(i,j,1)*ntau(1,1);
-			}
-		}
-
 	return result;
 }
 
