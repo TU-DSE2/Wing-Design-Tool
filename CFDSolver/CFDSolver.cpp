@@ -101,8 +101,8 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
-                u(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0), 0) = 0;
-                u(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0), 1) = 0;
+                u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 0) = 0;
+            	u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 1) = 0;
             }
         }
 
@@ -123,10 +123,10 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.Gamma.n_rows; i++) {
-                w(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1)) *= 0;
+                w(gridbdry.Gamma(i, 1), gridbdry.Gamma(i, 0)) *= 0;
             }
             for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
-                w(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0)) *= 0;
+                w(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1)) *= 0;
             }
         }
 
