@@ -100,8 +100,6 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
-                //u(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0), 0) = 0;//FIXED THIS, IMPORTANT
-                //u(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0), 1) = 0;
             	u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 0) = 0;
             	u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 1) = 0;
             }
@@ -115,25 +113,13 @@ void CFDSolver::run(int iterations) {
 
         //Something breaks below here
         if(solverparameters.viscous) {
-        	cout << "ERROR SITE IS HERE" << endl;
-        	cout << "u is : " << accu(u) << endl;
-        	cout << "w is : " << accu(w) << endl;
-        	cout << "deltat is : " << deltat << endl;
-            cout << "nu is : " << nu << endl;
-            //cout << "exactbdry is : " << exactbdry << endl;
-
             if(solverparameters.boundaries) {
                 w = viscous_wall_vorticity_flux(u, w, deltat, nu, exactbdry);
-                //cout << sum(sum(w));
             }
             ddw = laplace(w);
 
-            cout << "sum of ddw is : " << sum(sum(ddw)) << endl;
             w += deltat*nu*ddw;
         }
-
-        cout << "DIVERSION AFTER THIS POINT, SEE W VALUE" << endl;
-        cout << "sum of w in run.3 is : " << sum(sum(w)) << endl;
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.Gamma.n_rows; i++) {
@@ -145,25 +131,12 @@ void CFDSolver::run(int iterations) {
             	w(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1)) *= 0;
             }
         }
-        cout << "sum of w in run.4 is : " << sum(sum(w)) << endl;
         t += deltat;
         iter++;
     }
 }
 
 void CFDSolver::addVortex(int xcenter, int ycenter, double radius, double strength) {
-	cout << "w in add_vortex.1 is : " << sum(sum(w)) << endl;
-	cout << "xcenter is : " << xcenter << endl;
-	cout << "ycenter is : " << ycenter << endl;
-	cout << "radius is : " << radius << endl;
-	cout << "strength is : " << strength << endl;
-
-	//xcenter = 3;
-	//ycenter = 10;
-	//radius = 2.5;
-	//strength = 1;
-
-
     mat X = zeros<mat>(Nx, Nx);
     mat Y = zeros<mat>(Ny, Ny);
     for(unsigned int i = 0; i < X.n_rows; i++) {
@@ -173,13 +146,8 @@ void CFDSolver::addVortex(int xcenter, int ycenter, double radius, double streng
         Y.col(i) = y;
     }
 
-    cout << "sum of X matrix is : " << sum(sum(X)) << endl;
-    cout << "sum of Y matrix is : " << sum(sum(Y)) << endl;
-
-
     mat r = zeros<mat>(x.n_rows, y.n_rows);
     r = sqrt(square(trans(X)-xcenter) + square(trans(Y)-ycenter));
-    cout << "sum of r is : " << sum(sum(r)) << endl;
     mat temp = zeros<mat>(x.n_rows, y.n_rows);
     temp = 0.5*(cos(M_PI * r / radius) + 1)*strength;
     for(unsigned int i = 0; i < temp.n_cols; i++) {
@@ -189,9 +157,6 @@ void CFDSolver::addVortex(int xcenter, int ycenter, double radius, double streng
             }
         }
     }
-    cout << "temp is : " << sum(sum(temp)) << endl;
 
-    cout << "w in add_vortex.2 is : " << sum(sum(w)) << endl;
     w = w + temp;
-    cout << "w in add_vortex.3 is : " << sum(sum(w)) << endl;
 }
