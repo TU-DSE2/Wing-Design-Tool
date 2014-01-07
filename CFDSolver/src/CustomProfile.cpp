@@ -1,4 +1,7 @@
 #include "../include/CustomProfile.h"
+#include <QDir>
+
+#include <qdebug.h>
 
 /*CustomProfile::CustomProfile(mat Gamma_I_in, mat n_grid_in, mat interior_in, mat ex_loc_in, mat ex_n_in, vec ex_ds_in) {
     Gamma_I = Gamma_I_in;
@@ -52,6 +55,9 @@ CustomProfile::CustomProfile() {
 
         // Find interior boundary points Omega,using pnpoly from the web.
         interior = FindOmega(GridBndry, nGamma, gridsizex, gridsizey);
+        vec tempv = interior.col(0);
+        interior.col(0) = interior.col(1);
+        interior.col(1) = tempv;
 
         // Redefine matrices for saving
         Gamma_I = GridBndry.cols(0,1);
@@ -396,5 +402,5 @@ mat CustomProfile::FindOmega(mat GridBndry, int nGamma, int gridsizex, int grids
 }
 
 void CustomProfile::setSize(vec x, vec y, float float1, float float2, float float3, float float4) {
-
+    //TODO add scaling function here
 }

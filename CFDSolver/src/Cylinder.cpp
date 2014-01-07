@@ -121,8 +121,8 @@ void Cylinder::setSize(vec x, vec y, float xcenter, float ycenter, float radius,
     for(unsigned int i = 0; i < Oint_C.n_rows; i++) {
         for(unsigned int j = 0; j < Oint_C.n_cols; j++) {
             if(Oint_C(i, j) != 0) {
-                interior(m, 0) = i;
-                interior(m, 1) = j;
+                interior(m, 1) = i;
+                interior(m, 0) = j;
                 m++;
             }
         }

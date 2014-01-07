@@ -24,7 +24,7 @@ class SolverParameters {
 
         int matplotlib_output;
 
-        bool use_cuda;
+        bool use_GPU;
 };
 
 #endif // SOLVERPARAMETERS_H

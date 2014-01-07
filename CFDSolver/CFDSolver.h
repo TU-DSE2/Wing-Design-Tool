@@ -40,9 +40,9 @@ class CFDSolver {
         SolverParameters solverparameters;
         GridBdry gridbdry;
         ExactBdry exactbdry;
-        //CustomProfile profile;
+        CustomProfile profile;
         //Cylinder profile;
-        Rod profile;
+        //Rod profile;
         vec x;
         vec y;
         vec g;

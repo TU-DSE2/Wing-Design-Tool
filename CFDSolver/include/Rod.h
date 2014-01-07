@@ -17,10 +17,6 @@ class Rod {
     public:
         vec x;
         vec y;
-        float float1;
-        float float2;
-        float float3;
-        float float4;
 
         Rod(vec, vec);
         Rod() { }

@@ -15,7 +15,6 @@ CFDSolver::CFDSolver() {
     g_force = zeros<mat>(Nx, Ny);
 
     profile.setSize(x, y, Nx/4, Ny/2, Nx/16, 120);
-    //profile.setSize(x, y);
     gridbdry = profile.getGridBdry();
     exactbdry = profile.getExactBdry();
 
@@ -41,8 +40,8 @@ CFDSolver::CFDSolver(int Nxin, int Nyin) {
     dphi = zeros<cube>(Nx, Ny, 2);
     g_force = zeros<mat>(Nx, Ny);
 
+
     profile.setSize(x, y, Nx/4, Ny/2, Nx/16, 120);
-    //profile.setSize(x, y);
     gridbdry = profile.getGridBdry();
     exactbdry = profile.getExactBdry();
 
@@ -101,9 +100,13 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
-                u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 0) = 0;
-                    u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 1) = 0;
+                u(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0), 0) = 0;
+                u(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0), 1) = 0;
             }
+            /*for(unsigned int i = 0; i < gridbdry.Gamma.n_rows; i++) {
+                u(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1), 0) = 0;
+                u(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1), 1) = 0;
+            }*/
         }
 
         abs_u = abs(u);
@@ -122,10 +125,10 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.Gamma.n_rows; i++) {
-                w(gridbdry.Gamma(i, 1), gridbdry.Gamma(i, 0)) *= 0;
+                w(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1)) *= 0;
             }
             for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
-                w(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1)) *= 0;
+                w(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0)) *= 0;
             }
         }
 
@@ -133,6 +136,10 @@ void CFDSolver::run(int iterations) {
         iter++;
     }
 }
+
+/*
+  Generate a vortex at point (xcenter, ycenter).
+*/
 
 void CFDSolver::addVortex(int xcenter, int ycenter, double radius, double strength) {
     mat X = zeros<mat>(Nx, Nx);

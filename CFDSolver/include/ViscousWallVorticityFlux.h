@@ -23,14 +23,14 @@ static mat f_phi(cube inbound_X_cube, double d, float inbound_b){
     mat nphi = zeros(x.n_rows, x.n_cols);
     for (unsigned int i = 0; i < x.n_rows; i++){
         for (unsigned int j = 0; j < x.n_cols; j++){
-                        if (y(i,j) >= 0){
-                yswitch(i,j) = 1.0;
+                        if (y(i, j) >= 0){
+                yswitch(i, j) = 1.0;
             }
                         else {
-                yswitch(i,j) = 0.0;
+                yswitch(i, j) = 0.0;
             }
-            nphi(i, j) = 1/inbound_b * exp(-pow(y(i, j), 2)/pow(inbound_b, 2)) * (erf((d-x(i, j))/inbound_b) + erf(d+x(i,j))/inbound_b);
-                }
+                nphi(i, j) = 1/inbound_b * exp(-pow(y(i, j), 2)/pow(inbound_b, 2)) * (erf((d-x(i, j))/inbound_b) + erf(d+x(i,j))/inbound_b);
+            }
     }
     return nphi % yswitch;
 }
