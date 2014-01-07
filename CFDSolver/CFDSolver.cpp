@@ -59,7 +59,6 @@ rowvec CFDSolver::L_matvec(rowvec garg) {
         g_force(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1)) = garg(i);
     }
     phi = pSolve(g_force);
-
     dphi = grad_bdry(phi, dphi, gridbdry);
     return gridbdry.interp_normal(dphi);
 }
@@ -81,18 +80,20 @@ void CFDSolver::run(int iterations) {
     total_iterations = iter + iterations;
     while (iter < total_iterations) {
         psi = pSolve(-w);
-
         u = curl2(psi);
 
         u.slice(0) = u.slice(0) + solverparameters.mean_flow[0]*ones<mat>(u.slice(0).n_rows, u.slice(0).n_cols);
         u.slice(1) = u.slice(1) + solverparameters.mean_flow[1]*ones<mat>(u.slice(0).n_rows, u.slice(1).n_cols);
+
         if(solverparameters.boundaries) {
             b = -gridbdry.interp_normal(u);
             g = solve(Lmat, trans(b));
         }
+
         for(int i = 0; i < gridbdry.npoints(); i++) {
             g_force(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1)) = g(i);
         }
+
         phi = pSolve(g_force);
         dphi = grad(phi);
         dphi = grad_bdry(phi, dphi, gridbdry);
@@ -100,48 +101,35 @@ void CFDSolver::run(int iterations) {
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
-<<<<<<< HEAD
-            	u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 0) = 0;
-=======
                 u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 0) = 0;
->>>>>>> d095b7b4432fb6716309997bcd4ce28405b659e5
-            	u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 1) = 0;
+                    u(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1), 1) = 0;
             }
         }
 
-        abs_u = abs(u);//abs_u is also wrong.
+        abs_u = abs(u);
         deltat = min(0.7/abs_u.max(), 1/(4.1*nu));
         for(int i = 0; i < solverparameters.n_advection_steps; i++) {
             w = interpolate_M4(w, u*deltat);
         }
 
-        //Something breaks below here
         if(solverparameters.viscous) {
             if(solverparameters.boundaries) {
                 w = viscous_wall_vorticity_flux(u, w, deltat, nu, exactbdry);
+                cout << sum(sum(w));
             }
             ddw = laplace(w);
-
             w += deltat*nu*ddw;
         }
 
         if(solverparameters.boundaries) {
             for(unsigned int i = 0; i < gridbdry.Gamma.n_rows; i++) {
-<<<<<<< HEAD
-                //w(gridbdry.Gamma(i, 0), gridbdry.Gamma(i, 1)) *= 0;
-            	w(gridbdry.Gamma(i, 1), gridbdry.Gamma(i, 0)) *= 0;
-            }
-            for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
-                //w(gridbdry.OmegaI(i, 1), gridbdry.OmegaI(i, 0)) *= 0;
-            	w(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1)) *= 0;
-=======
                 w(gridbdry.Gamma(i, 1), gridbdry.Gamma(i, 0)) *= 0;
             }
             for(unsigned int i = 0; i < gridbdry.OmegaI.n_rows; i++) {
                 w(gridbdry.OmegaI(i, 0), gridbdry.OmegaI(i, 1)) *= 0;
->>>>>>> d095b7b4432fb6716309997bcd4ce28405b659e5
             }
         }
+
         t += deltat;
         iter++;
     }
@@ -156,7 +144,6 @@ void CFDSolver::addVortex(int xcenter, int ycenter, double radius, double streng
     for(unsigned int i = 0; i < Y.n_cols; i++) {
         Y.col(i) = y;
     }
-
     mat r = zeros<mat>(x.n_rows, y.n_rows);
     r = sqrt(square(trans(X)-xcenter) + square(trans(Y)-ycenter));
     mat temp = zeros<mat>(x.n_rows, y.n_rows);
@@ -168,6 +155,5 @@ void CFDSolver::addVortex(int xcenter, int ycenter, double radius, double streng
             }
         }
     }
-
     w = w + temp;
 }
