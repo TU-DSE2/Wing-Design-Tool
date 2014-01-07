@@ -17,11 +17,15 @@ class Rod {
     public:
         vec x;
         vec y;
+        float float1;
+        float float2;
+        float float3;
+        float float4;
 
         Rod(vec, vec);
         Rod() { }
 
-        void setSize(vec, vec);
+        void setSize(vec, vec, float, float, float, float);
         GridBdry getGridBdry();
         ExactBdry getExactBdry();
     protected:

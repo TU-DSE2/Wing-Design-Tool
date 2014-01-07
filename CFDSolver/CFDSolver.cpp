@@ -115,7 +115,6 @@ void CFDSolver::run(int iterations) {
         if(solverparameters.viscous) {
             if(solverparameters.boundaries) {
                 w = viscous_wall_vorticity_flux(u, w, deltat, nu, exactbdry);
-                cout << sum(sum(w));
             }
             ddw = laplace(w);
             w += deltat*nu*ddw;

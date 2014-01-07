@@ -23,7 +23,7 @@ class CustomProfile:public Profile {
     public:
         CustomProfile();
         CustomProfile(mat, mat, mat, mat, mat, vec);
-        void setSize(vec, vec);
+        void setSize(vec, vec, float, float, float, float);
     private:
         mat bdryPoints;pair<mat, int> open_file(string) ;
         mat scalecoodsdown(mat);

@@ -17,47 +17,52 @@ CustomProfile::CustomProfile() {
 
     // Opening file using the function open_file, returning int Nrows
     // and matrix A, containing the coördinates
-    string myfilename="121.dat";
-    pair <mat, int> A_Nrows;
-    A_Nrows=open_file(myfilename);          // Opening the file
-    mat A = A_Nrows.first;                  // Seperating pair
-    int Nrows = A_Nrows.second;
+    string myfilename="374.dat";
+    ifstream ifile(myfilename.c_str());
+    if(ifile) {
+        pair <mat, int> A_Nrows;
+        A_Nrows=open_file(myfilename);          // Opening the file
+        mat A = A_Nrows.first;                  // Seperating pair
+        int Nrows = A_Nrows.second;
 
-    // Define grid
-    mat Grid = zeros(gridsizex,gridsizey);
-    // Scaling the coods from A down and setting mean of y to half the grid
-    A = scalecoodsdown(A);
-    // Transform coordinates with the chosen angle of attack
-    rotatecoods(alpha, A, Nrows);                    // Returns A, with rotated coods, not bigger then one
-    // Scale the airfoil to the grid.
-    scalecoods(scale, gridsize, A);                  // Returns A, with scaled coods, hopefully not bigger then the grid
+        // Define grid
+        mat Grid = zeros(gridsizex,gridsizey);
+        // Scaling the coods from A down and setting mean of y to half the grid
+        A = scalecoodsdown(A);
+        // Transform coordinates with the chosen angle of attack
+        rotatecoods(alpha, A, Nrows);                    // Returns A, with rotated coods, not bigger then one
+        // Scale the airfoil to the grid.
+        scalecoods(scale, gridsize, A);                  // Returns A, with scaled coods, hopefully not bigger then the grid
 
 
-    // Find the exact boundary
-    mat ExactBndry = ExactBoundary(A, Nrows);
+        // Find the exact boundary
+        mat ExactBndry = ExactBoundary(A, Nrows);
 
-    // Get the original normal unitvectors from the airfoil itself
-    mat normals = createoriginalnormals(1,A,Nrows);
+        // Get the original normal unitvectors from the airfoil itself
+        mat normals = createoriginalnormals(1,A,Nrows);
 
-    // Create the grid boundary matrices, containing the information in matrix format
-    cube GridBndryCube = CreateGridBndryCube(A, normals, Nrows, gridsizex, gridsizey);
-    // Find amount of gridpoints
-    mat matGamma = GridBndryCube.slice(0);
-    int nGamma = accu(matGamma);
+        // Create the grid boundary matrices, containing the information in matrix format
+        cube GridBndryCube = CreateGridBndryCube(A, normals, Nrows, gridsizex, gridsizey);
+        // Find amount of gridpoints
+        mat matGamma = GridBndryCube.slice(0);
+        int nGamma = accu(matGamma);
 
-    // Creating the Grid Bndry from the cube. Ordering them as well.
-    mat GridBndry = CreateGridBndry(GridBndryCube,nGamma,gridsizex,gridsizey);
+        // Creating the Grid Bndry from the cube. Ordering them as well.
+        mat GridBndry = CreateGridBndry(GridBndryCube,nGamma,gridsizex,gridsizey);
 
-    // Find interior boundary points Omega,using pnpoly from the web.
-    interior = FindOmega(GridBndry, nGamma, gridsizex, gridsizey);
+        // Find interior boundary points Omega,using pnpoly from the web.
+        interior = FindOmega(GridBndry, nGamma, gridsizex, gridsizey);
 
-    // Redefine matrices for saving
-    Gamma_I = GridBndry.cols(0,1);
-    n_grid = GridBndry.cols(2,3);
+        // Redefine matrices for saving
+        Gamma_I = GridBndry.cols(0,1);
+        n_grid = GridBndry.cols(2,3);
 
-    ex_loc = ExactBndry.cols(0, 1);
-    ex_ds = ExactBndry.col(2);
-    ex_n = ExactBndry.cols(3, 4);
+        ex_loc = ExactBndry.cols(0, 1);
+        ex_ds = ExactBndry.col(2);
+        ex_n = ExactBndry.cols(3, 4);
+    } else {
+        cout << "Error: file not found!";
+    }
 }
 
 pair<mat, int> CustomProfile::open_file(string myfilename)
@@ -390,6 +395,6 @@ mat CustomProfile::FindOmega(mat GridBndry, int nGamma, int gridsizex, int grids
     return Omega;
 }
 
-void CustomProfile::setSize(vec x, vec y) {
+void CustomProfile::setSize(vec x, vec y, float float1, float float2, float float3, float float4) {
 
 }

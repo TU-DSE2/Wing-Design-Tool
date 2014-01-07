@@ -138,7 +138,7 @@ ExactBdry Rod::getExactBdry() {
     return exactbdry;
 }
 
-void Rod::setSize(vec x_in, vec y_in) {
+void Rod::setSize(vec x_in, vec y_in, float float1, float float2, float float3, float float4) {
     x = x_in;
     y = y_in;
 

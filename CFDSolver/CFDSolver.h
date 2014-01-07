@@ -41,8 +41,8 @@ class CFDSolver {
         GridBdry gridbdry;
         ExactBdry exactbdry;
         //CustomProfile profile;
-        Cylinder profile;
-        //Rod profile;
+        //Cylinder profile;
+        Rod profile;
         vec x;
         vec y;
         vec g;
